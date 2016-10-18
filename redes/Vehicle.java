@@ -1,11 +1,21 @@
 package redes;
 
 public class Vehicle {
-	static int reserved = 0;
-	static final int seats = 30;
+	static int reserved;
+	static int seats;
 	int id;
 	
+	public Vehicle(){
+		reserved=0;
+		seats=20;
+		id=0;
+	}
 	
+	public Vehicle(int r, int s, int i){
+		reserved=r;
+		seats=s;
+		id=i;
+	}
 
 	public static int getReserved() {
 		return reserved;
