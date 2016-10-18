@@ -4,6 +4,28 @@ public class Vehicle {
 	static int reserved = 0;
 	static final int seats = 30;
 	int id;
+	
+	
+
+	public static int getReserved() {
+		return reserved;
+	}
+
+	public static void setReserved(int reserved) {
+		Vehicle.reserved = reserved;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public static int getSeats() {
+		return seats;
+	}
 
 	public static int available() {
 		return seats - reserved;
