@@ -1,20 +1,30 @@
 package redes;
 
 public class Vehicle {
+	// cantidad de asientos reservados
 	static int reserved;
+	// cantidad de asientos disponibles
 	static int seats;
+	// identificador del vehiculo (su numero)
 	int id;
-	
-	public Vehicle(){
-		reserved=0;
-		seats=20;
-		id=0;
+
+	public Vehicle() {
+		reserved = 0;
+		seats = 20;
+		id = 0;
 	}
-	
-	public Vehicle(int r, int s, int i){
-		reserved=r;
-		seats=s;
-		id=i;
+
+	public Vehicle(int r, int s, int i) {
+		if (r < s) {
+			reserved = r;
+		} else {
+			reserved = 0;
+		}
+		if (s > 0) {
+		} else {
+			seats = 30;
+		}
+		id = i;
 	}
 
 	public static int getReserved() {
