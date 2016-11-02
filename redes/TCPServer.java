@@ -21,7 +21,7 @@ public class TCPServer extends Thread {
     }
     
     /*Metodo que se encarga de procesar un request del cliente*/
-    /*private void request(String data)throws IOException{
+   private void request(String data)throws IOException{
         String[] arrayData = data.split(" ");
         String command = arrayData[0];
         Main.parameter = -1; 
@@ -33,7 +33,7 @@ public class TCPServer extends Thread {
         }
         Main.q.add(message);
         UDPServer.broadcast(message, Main.REQUEST);
-    }*/
+    }
     
     @Override
     public void run() {
@@ -46,7 +46,7 @@ public class TCPServer extends Thread {
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                     outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                     clientSentence = inFromClient.readLine();
-                    //request(clientSentence);
+                    request(clientSentence);
                 }
                 
             } catch (IOException ex) {

@@ -5,11 +5,6 @@ public class Terminal {
 	static Vehicle v;
 	static int time = 0;
 
-	public Terminal() {
-		IPPort = 8080;
-		v = new Vehicle();
-	}
-
 	public Terminal(int ip, Vehicle ve) {
 		IPPort = ip;
 		v = ve;
