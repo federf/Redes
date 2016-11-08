@@ -16,7 +16,7 @@ public class Main {
     public static int pid;
     public static int udpPort;
     public static int tcpPort;
-    public static ArrayList<PeerData> peerData = new ArrayList();
+    public static ArrayList<PeerData> peerData = new ArrayList<PeerData>();
     public static int parameter = -1; // parametro opcional de las consultas
     public static String command = "";
     

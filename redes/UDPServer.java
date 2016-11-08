@@ -41,17 +41,17 @@ public class UDPServer extends Thread {
                     case Main.REPLY:
                         Terminal.time = Math.max(Terminal.time, msg.getTime()) + 1;
                         replyCount++;
-                        if(replyCount >= Main.peerData.size()){   	//??????
-                            checkAndExecute();						//??????
-                        }											//??????
+                        if(replyCount >= Main.peerData.size()){
+                            checkAndExecute();
+                        }
                     break;
                     case Main.RELEASE:
-                        Main.q.remove();
+                        Main.q.remove(); ////???????????
                         Terminal.time = Math.max(Terminal.time, msg.getTime()) + 1;
                         //Terminal.reserved= Integer.parseInt(s[2]); // s[2] = estado
-                        if(replyCount >= Main.peerData.size()){   	//??????
-                            checkAndExecute();	//se fija si es su turno y ejecuta					//??????
-                        }											//??????                
+                        /*if(replyCount >= Main.peerData.size()){
+                            checkAndExecute();	//se fija si es su turno y ejecuta
+                        }*/
                     break;
                 
                 }
@@ -95,7 +95,7 @@ public class UDPServer extends Thread {
     
     /*Metodo que manda release a todos*/
     public static void release() throws IOException {
-        replyCount = 0; //replyCount--;???
+        replyCount = 0;
         Terminal.time++;
         //Message m = new Message(Terminal.time,Main.pid,Terminal.reserved);
         Message m = new Message(Terminal.time,Main.pid);
@@ -105,17 +105,22 @@ public class UDPServer extends Thread {
     /*Metodo que manda reply a quien corresponda*/
     private void reply(int dst) throws IOException {
         int i;
-        for (i = 0; !(Main.peerData.get(i).getPid() == dst);i++){};
-        Terminal.time++;
-        Message m = new Message(Terminal.time,Main.pid);
-        DatagramSocket clientSocket = new DatagramSocket();            
-        InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
-        String sentence = Main.REPLY+ "-" + m.toString();
-        byte[] sendData = new byte[1024];
-        sendData = sentence.getBytes();
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Main.peerData.get(i).getUdpPort());
-        clientSocket.send(sendPacket);             
-        clientSocket.close();
+        for (i = 0; !(Main.peerData.get(i).getPid() == dst) && i<Main.peerData.size();i++){};
+        
+        if(i>=Main.peerData.size()){
+        	throw new IOException("Current Process Id does not belong to any known peer");
+        }else{
+            Terminal.time++;
+            Message m = new Message(Terminal.time,Main.pid);
+            DatagramSocket clientSocket = new DatagramSocket();            
+            InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
+            String sentence = Main.REPLY+ "-" + m.toString();
+            byte[] sendData = new byte[1024];
+            sendData = sentence.getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Main.peerData.get(i).getUdpPort());
+            clientSocket.send(sendPacket);             
+            clientSocket.close();
+        }
     }
     
     /*Metodo que manda un mensaje a todos los peers*/
