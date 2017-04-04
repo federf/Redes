@@ -29,8 +29,18 @@ public class UDPServer extends Thread {
             try {
                 serverSocket.receive(receivePacket);
                 String sentence = new String(receivePacket.getData());
+                sentence=sentence.trim();
+                System.out.println("sentence: "+sentence);
+                sentence.replace('"', ' ');
                 String[] s = sentence.split("-");
-                Message msg = new Message(Integer.parseInt(s[1]),Integer.parseInt(s[3])); //s[1] = tiempo , s[3]= pid
+                System.out.println("cantidad de datos "+s.length);
+                System.out.println("s[0] "+s[0].toString());
+                System.out.println("s[1] "+s[1].toString());
+                System.out.println("s[2] "+s[2].toString());
+                int timemsg=Integer.parseInt(s[1]);
+                int pidmsg=Integer.parseInt(s[2]);
+                System.out.println("time: "+timemsg+", pid: "+pidmsg);
+                Message msg = new Message(timemsg,pidmsg); //s[1] = tiempo , s[2]= pid
                 switch(s[0]){ //s[0] = comando
                     case Main.REQUEST:    
                         // crea el mensaje nuevo con lo que le llego
