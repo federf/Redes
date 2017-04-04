@@ -12,6 +12,7 @@ public class Main {
     public static final String REQUEST = "REQUEST";
     public static final String REPLY = "REPLY";
     public static final String RELEASE = "RELEASE";
+    // AGREGAR REPLYRELEASE? THREE FACE COMMIT*
     public static final int NPROCESSES = 1;
     public static int pid;
     public static int udpPort;
@@ -23,8 +24,11 @@ public class Main {
     //Cola de prioridades, donde se encolan consultas, es la estructura que usa el algoritmo distribuido de Lamport para la exclusion mutua
     static SyncQueue<Message> q = new SyncQueue<Message>(10, new Comparator<Message>() {
         public int compare(Message m1, Message m2) {
+        	//ordena segun el "tiempo" en que llegan los mensajes
             return (m1.getTime() > m2.getTime()) ? 1
                     : (m1.getTime() < m2.getTime()) ? -1
+                    		//en caso de que dos mensajes lleguen al mismo tiempo
+                    		//se encola primero el mensaje cuyo PId es mayor
                             : (m1.getPid() > m2.getPid()) ? 1 : -1;
         }
     });
@@ -51,7 +55,7 @@ public class Main {
 
     /*Metodo principal, inicia los hilos de ejecucion de tcp para el cliente y udp para los peers*/
     public static void main(String[] args) throws IOException {
-        loadConfig(args[0]);
+        loadConfig("src/redes/config.txt");
         for (PeerData pd : peerData){
             System.out.println(pd.toString());
         }

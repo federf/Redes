@@ -1,11 +1,11 @@
 package redes;
 
-public class Terminal {
+public class PuntoDeVenta {
 	int IPPort;
 	static Vehicle v;
 	static int time = 0;
 
-	public Terminal(int ip, Vehicle ve) {
+	public PuntoDeVenta(int ip, Vehicle ve) {
 		IPPort = ip;
 		v = ve;
 	}

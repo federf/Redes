@@ -33,7 +33,7 @@ public class Vehicle {
 
 	public boolean reserve(int n) {
 		if (n <= available()) {
-			System.out.println("Reservaste " + n);
+			//System.out.println("Reservaste " + n);
 			reserved += n;
 			return true;
 		}
@@ -42,7 +42,7 @@ public class Vehicle {
 
 	public boolean cancel(int n) {
 		if (n <= reserved) {
-			System.out.println("Cancelaste " + n);
+			//System.out.println("Cancelaste " + n);
 			reserved -= n;
 			return true;
 		}

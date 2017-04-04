@@ -23,7 +23,7 @@ public class UDPServer extends Thread {
 
     @Override
     public void run() {
-        System.out.println("UDP SERVER ON");
+        System.out.println("UDP SERVER ON, port: "+serverSocket.getLocalPort());
         while (true) {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             try {
@@ -33,21 +33,21 @@ public class UDPServer extends Thread {
                 Message msg = new Message(Integer.parseInt(s[1]),Integer.parseInt(s[3])); //s[1] = tiempo , s[3]= pid
                 switch(s[0]){ //s[0] = comando
                     case Main.REQUEST:    
-                         // crea el mensaje nuevo con lo que le llego
-                        Terminal.time = Math.max(Terminal.time, msg.getTime()) + 1;              
+                        // crea el mensaje nuevo con lo que le llego
+                        PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;              
                         Main.q.add(msg);
                         reply(msg.getPid());
                     break;
                     case Main.REPLY:
-                        Terminal.time = Math.max(Terminal.time, msg.getTime()) + 1;
+                        PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
                         replyCount++;
                         if(replyCount >= Main.peerData.size()){
                             checkAndExecute();
                         }
                     break;
                     case Main.RELEASE:
-                        Main.q.remove(); ////???????????
-                        Terminal.time = Math.max(Terminal.time, msg.getTime()) + 1;
+                        Main.q.remove();
+                        PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
                         //Terminal.reserved= Integer.parseInt(s[2]); // s[2] = estado
                         /*if(replyCount >= Main.peerData.size()){
                             checkAndExecute();	//se fija si es su turno y ejecuta
@@ -73,13 +73,21 @@ public class UDPServer extends Thread {
     public static void exec(){        
         switch(Main.command){
             case "available":
-                System.out.println("Quedan " + Terminal.available() + " lugares");
+                System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
             break;
             case "reserve":
-                Terminal.reserve(Main.parameter);
+                if(PuntoDeVenta.reserve(Main.parameter)){
+                	System.out.println("Reservaste exitosa");
+                }else{
+                	System.out.println("No hay suficientes asientos disponibles");
+                }
             break;
             case "cancel":
-                Terminal.cancel(Main.parameter);
+                if(PuntoDeVenta.cancel(Main.parameter)){
+                	System.out.println("Cancelacion exitosa");
+                }else{
+                	System.out.println("Error al cancelar");
+                }
             break;
         }
     }
@@ -96,28 +104,39 @@ public class UDPServer extends Thread {
     /*Metodo que manda release a todos*/
     public static void release() throws IOException {
         replyCount = 0;
-        Terminal.time++;
+        PuntoDeVenta.time++;
         //Message m = new Message(Terminal.time,Main.pid,Terminal.reserved);
-        Message m = new Message(Terminal.time,Main.pid);
+        Message m = new Message(PuntoDeVenta.time,Main.pid);
         broadcast(m,Main.RELEASE);
     }
     
-    /*Metodo que manda reply a quien corresponda*/
+    /* Metodo que manda reply a quien corresponda,
+     * determina mediante pid a que peer debe hacer reply*/
     private void reply(int dst) throws IOException {
         int i;
+        // buscar el indice en que se encuentra el peer a cual debe responder mediante su pid
         for (i = 0; !(Main.peerData.get(i).getPid() == dst) && i<Main.peerData.size();i++){};
         
+        // si no encuentra tal pid devuelve una excepcion
         if(i>=Main.peerData.size()){
         	throw new IOException("Current Process Id does not belong to any known peer");
         }else{
-            Terminal.time++;
-            Message m = new Message(Terminal.time,Main.pid);
-            DatagramSocket clientSocket = new DatagramSocket();            
+        	// sino, aumenta el tiempo de la terminal
+            PuntoDeVenta.time++;
+            // crea un nuevo mensaje conteniendo el tiempo de la terminal y el pid local
+            Message m = new Message(PuntoDeVenta.time,Main.pid);
+            // crea un nuevo DatagramSocket
+            DatagramSocket clientSocket = new DatagramSocket();
+            // obtiene el IP al cual debe enviar el mensaje
             InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
+            // crea el contenido del nuevo mensaje "REPLY-time-pid-"
             String sentence = Main.REPLY+ "-" + m.toString();
             byte[] sendData = new byte[1024];
             sendData = sentence.getBytes();
+            // crea un nuevo DatagramPacket con el contenido del mensaje, 
+            // su longitud, IP al cual lo enviara y numero de Peer (puerto UDP)
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Main.peerData.get(i).getUdpPort());
+            // envía el mensaje y cierra la conexion
             clientSocket.send(sendPacket);             
             clientSocket.close();
         }

@@ -26,8 +26,8 @@ public class TCPServer extends Thread {
         String command = arrayData[0];
         Main.parameter = -1; 
         Main.command = command;
-        Terminal.time++;
-        Message message = new Message(Terminal.time,Main.pid); //agregarle el parametro al mensaje
+        PuntoDeVenta.time++;
+        Message message = new Message(PuntoDeVenta.time,Main.pid); //agregarle el parametro al mensaje
         if(arrayData.length > 1){
             Main.parameter = Integer.parseInt(arrayData[1]);
         }
@@ -37,7 +37,7 @@ public class TCPServer extends Thread {
     
     @Override
     public void run() {
-        System.out.println("TCP SERVER ON");
+        System.out.println("TCP SERVER ON, port: "+welcomeSocket.getLocalPort());
  
             Socket connectionSocket;
             try {
