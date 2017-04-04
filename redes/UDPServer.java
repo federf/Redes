@@ -144,19 +144,23 @@ public class UDPServer extends Thread {
     
     /*Metodo que manda un mensaje a todos los peers*/
     public static void broadcast(Message message, String type) throws IOException{
-        for (int i = 0; i < Main.peerData.size(); i++) {
-            DatagramSocket clientSocket = new DatagramSocket();            
-            InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
-            String sentence = "";
-            if(message != null)
-                sentence = type+ "-" + message.toString();
-            else
-                sentence = type+ "-";
-            byte[] sendData = new byte[1024];
-            sendData = sentence.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Main.peerData.get(i).getUdpPort());
-            clientSocket.send(sendPacket);                
-            clientSocket.close();  
+    	if(Main.peerData.size()>0){
+    		for (int i = 0; i < Main.peerData.size(); i++) {
+                DatagramSocket clientSocket = new DatagramSocket();            
+                InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
+                String sentence = "";
+                if(message != null)
+                    sentence = type+ "-" + message.toString();
+                else
+                    sentence = type+ "-";
+                byte[] sendData = new byte[1024];
+                sendData = sentence.getBytes();
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Main.peerData.get(i).getUdpPort());
+                clientSocket.send(sendPacket);                
+                clientSocket.close();  
+            }
+    	}else{
+        	System.out.println("No hay peers");
         }
     }
 }

@@ -22,6 +22,7 @@ public class TCPServer extends Thread {
     
     /*Metodo que se encarga de procesar un request del cliente*/
    private void request(String data)throws IOException{
+	   System.out.println("request recibe: "+data+".");
         String[] arrayData = data.split(" ");
         String command = arrayData[0];
         Main.parameter = -1; 
@@ -31,8 +32,15 @@ public class TCPServer extends Thread {
         if(arrayData.length > 1){
             Main.parameter = Integer.parseInt(arrayData[1]);
         }
+        System.out.println("mensaje request: "+message+".");
         Main.q.add(message);
-        UDPServer.broadcast(message, Main.REQUEST);
+        // si hay al menos un peer se debe hacer broadcast
+        if(Main.peerData.size()>0){
+        	UDPServer.broadcast(message, Main.REQUEST);
+        }else{
+        	checkAndExecute();
+        }
+        
     }
     
     @Override
@@ -46,6 +54,7 @@ public class TCPServer extends Thread {
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                     outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                     clientSentence = inFromClient.readLine();
+                    System.out.println("me llegó: "+clientSentence);
                     request(clientSentence);
                 }
                 
@@ -53,5 +62,36 @@ public class TCPServer extends Thread {
                 Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         
+    }
+    
+    /*Metodo que ejecuta el codigo correspondiente al request*/
+    public static void exec(){        
+        switch(Main.command){
+            case "available":
+                System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
+            break;
+            case "reserve":
+                if(PuntoDeVenta.reserve(Main.parameter)){
+                	System.out.println("Reservaste exitosa");
+                }else{
+                	System.out.println("No hay suficientes asientos disponibles");
+                }
+            break;
+            case "cancel":
+                if(PuntoDeVenta.cancel(Main.parameter)){
+                	System.out.println("Cancelacion exitosa");
+                }else{
+                	System.out.println("Error al cancelar");
+                }
+            break;
+        }
+    }
+    
+    /*Metodo que llama a exec solo si tiene derecho a acceder a la region critica*/
+    private void checkAndExecute() throws IOException{
+        if (!Main.q.isEmpty() && Main.q.peek().getPid() == Main.pid) {
+            Main.q.remove(); 
+            exec();
+        }
     }
 }

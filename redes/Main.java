@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -13,6 +14,7 @@ public class Main {
     public static final String REPLY = "REPLY";
     public static final String RELEASE = "RELEASE";
     // AGREGAR REPLYRELEASE? THREE FACE COMMIT*
+    static PuntoDeVenta pdv;
     public static final int NPROCESSES = 1;
     public static int pid;
     public static int udpPort;
@@ -59,6 +61,7 @@ public class Main {
         for (PeerData pd : peerData){
             System.out.println(pd.toString());
         }
+        pdv=new PuntoDeVenta(InetAddress.getLocalHost().toString());
         System.out.println("mis datos. id: " + pid +", udpPort: " + udpPort + ", tcpPort: " + tcpPort);
         TCPServer tcp = new TCPServer(tcpPort);
         UDPServer udp = new UDPServer(udpPort);

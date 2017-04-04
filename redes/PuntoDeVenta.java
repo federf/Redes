@@ -1,13 +1,18 @@
 package redes;
 
 public class PuntoDeVenta {
-	int IPPort;
+	String IPPort;
 	static Vehicle v;
 	static int time = 0;
 
-	public PuntoDeVenta(int ip, Vehicle ve) {
+	public PuntoDeVenta(String ip, Vehicle ve) {
 		IPPort = ip;
 		v = ve;
+	}
+	
+	public PuntoDeVenta(String ip){
+		IPPort=ip;
+		v=new Vehicle();
 	}
 	
 	public void setVehicle(Vehicle vhcl){

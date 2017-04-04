@@ -47,7 +47,7 @@ class Message {
 	@Override
 	public String toString() {
 		//return time + "-" + state + "-" + pid + "-";
-		return time + "-" + pid + "-";
+		return time + "-" + pid;
 	}
 
 }
