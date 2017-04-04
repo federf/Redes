@@ -15,8 +15,8 @@ public class UDPServer extends Thread {
     byte[] receiveData;
     byte[] sendData;
 
-    public UDPServer() throws SocketException {
-        serverSocket = new DatagramSocket(1235);
+    public UDPServer(int Port) throws SocketException {
+        serverSocket = new DatagramSocket(Port);
         receiveData = new byte[1024];
         sendData = new byte[1024];
     }

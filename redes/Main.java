@@ -60,8 +60,8 @@ public class Main {
             System.out.println(pd.toString());
         }
         System.out.println("mis datos. id: " + pid +", udpPort: " + udpPort + ", tcpPort: " + tcpPort);
-        TCPServer tcp = new TCPServer();
-        UDPServer udp = new UDPServer();
+        TCPServer tcp = new TCPServer(tcpPort);
+        UDPServer udp = new UDPServer(udpPort);
         tcp.start();
         udp.start();
     }

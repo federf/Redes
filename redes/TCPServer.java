@@ -16,8 +16,8 @@ public class TCPServer extends Thread {
     ServerSocket welcomeSocket;
     DataOutputStream outToClient;  
        
-    public TCPServer() throws IOException {
-        welcomeSocket = new ServerSocket(1234);
+    public TCPServer(int Port) throws IOException {
+        welcomeSocket = new ServerSocket(Port);
     }
     
     /*Metodo que se encarga de procesar un request del cliente*/
