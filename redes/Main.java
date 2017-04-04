@@ -14,7 +14,7 @@ public class Main {
     public static final String REPLY = "REPLY";
     public static final String RELEASE = "RELEASE";
     // AGREGAR REPLYRELEASE? THREE FACE COMMIT*
-    static PuntoDeVenta pdv;
+    public static PuntoDeVenta pdv;
     public static final int NPROCESSES = 1;
     public static int pid;
     public static int udpPort;

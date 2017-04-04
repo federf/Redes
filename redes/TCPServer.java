@@ -28,7 +28,7 @@ public class TCPServer extends Thread {
         Main.parameter = -1; 
         Main.command = command;
         PuntoDeVenta.time++;
-        Message message = new Message(PuntoDeVenta.time,Main.pid); //agregarle el parametro al mensaje
+        Message message = new Message(PuntoDeVenta.time,Main.pid,Main.pdv.available()); //agregarle el parametro al mensaje
         if(arrayData.length > 1){
             Main.parameter = Integer.parseInt(arrayData[1]);
         }

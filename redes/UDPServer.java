@@ -40,7 +40,7 @@ public class UDPServer extends Thread {
                 int timemsg=Integer.parseInt(s[1]);
                 int pidmsg=Integer.parseInt(s[2]);
                 System.out.println("time: "+timemsg+", pid: "+pidmsg);
-                Message msg = new Message(timemsg,pidmsg); //s[1] = tiempo , s[2]= pid
+                Message msg = new Message(timemsg,pidmsg,Main.pdv.available()); //s[1] = tiempo , s[2]= pid
                 switch(s[0]){ //s[0] = comando
                     case Main.REQUEST:    
                         // crea el mensaje nuevo con lo que le llego
@@ -59,7 +59,7 @@ public class UDPServer extends Thread {
                         Main.q.remove();
                         PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
                         //Terminal.reserved= Integer.parseInt(s[2]); // s[2] = estado
-                        if(Main.command.compareTo("available")==0){
+                        if(Main.command.compareTo("available")!=0){
                         	PuntoDeVenta.v.setReserved(Integer.parseInt(s[3]));
                         }
                         if(replyCount >= Main.peerData.size()){
@@ -119,7 +119,7 @@ public class UDPServer extends Thread {
         replyCount = 0;
         PuntoDeVenta.time++;
         //Message m = new Message(Terminal.time,Main.pid,Terminal.reserved);
-        Message m = new Message(PuntoDeVenta.time,Main.pid);
+        Message m = new Message(PuntoDeVenta.time,Main.pid, Main.pdv.available());
         broadcast(m,Main.RELEASE);
     }
     
@@ -137,7 +137,7 @@ public class UDPServer extends Thread {
         	// sino, aumenta el tiempo de la terminal
             PuntoDeVenta.time++;
             // crea un nuevo mensaje conteniendo el tiempo de la terminal y el pid local
-            Message m = new Message(PuntoDeVenta.time,Main.pid);
+            Message m = new Message(PuntoDeVenta.time,Main.pid,Main.pdv.available());
             // crea un nuevo DatagramSocket
             DatagramSocket clientSocket = new DatagramSocket();
             // obtiene el IP al cual debe enviar el mensaje

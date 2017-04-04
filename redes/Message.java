@@ -6,12 +6,13 @@ package redes;
  */
 class Message {
 	private int time;
-	//private int state;
+	private int state;
 	private int pid;
 
-	public Message(int time, int pid) {
+	public Message(int time, int pid, int state) {
 		this.time = time;
 		this.pid = pid;
+		this.state=state;
 	}
 
 	/*public Message(int time, int pid, int state) {
@@ -43,11 +44,19 @@ class Message {
 	public void setPid(int pid) {
 		this.pid = pid;
 	}
+	
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
 
 	@Override
 	public String toString() {
 		//return time + "-" + state + "-" + pid + "-";
-		return time + "-" + pid;
+		return time + "-" + pid + "-"+ state;
 	}
 
 }
