@@ -28,12 +28,13 @@ public class Vehicle {
 	}
 	
 	public int available() {
+		System.out.println("cantidad de asientos "+seats);
+		System.out.println("cantidad de reservados "+reserved);
 		return seats - reserved;
 	}
 
 	public boolean reserve(int n) {
 		if (n <= available()) {
-			//System.out.println("Reservaste " + n);
 			reserved += n;
 			return true;
 		}
@@ -42,7 +43,6 @@ public class Vehicle {
 
 	public boolean cancel(int n) {
 		if (n <= reserved) {
-			//System.out.println("Cancelaste " + n);
 			reserved -= n;
 			return true;
 		}

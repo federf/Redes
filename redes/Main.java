@@ -13,7 +13,6 @@ public class Main {
     public static final String REQUEST = "REQUEST";
     public static final String REPLY = "REPLY";
     public static final String RELEASE = "RELEASE";
-    // AGREGAR REPLYRELEASE? THREE FACE COMMIT*
     public static PuntoDeVenta pdv;
     public static final int NPROCESSES = 1;
     public static int pid;

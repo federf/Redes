@@ -40,7 +40,7 @@ public class UDPServer extends Thread {
                 int timemsg=Integer.parseInt(s[1]);
                 int pidmsg=Integer.parseInt(s[2]);
                 System.out.println("time: "+timemsg+", pid: "+pidmsg);
-                Message msg = new Message(timemsg,pidmsg,Main.pdv.available()); //s[1] = tiempo , s[2]= pid
+                Message msg = new Message(timemsg,pidmsg,PuntoDeVenta.available()); //s[1] = tiempo , s[2]= pid
                 switch(s[0]){ //s[0] = comando
                     case Main.REQUEST:    
                         // crea el mensaje nuevo con lo que le llego
@@ -119,7 +119,8 @@ public class UDPServer extends Thread {
         replyCount = 0;
         PuntoDeVenta.time++;
         //Message m = new Message(Terminal.time,Main.pid,Terminal.reserved);
-        Message m = new Message(PuntoDeVenta.time,Main.pid, Main.pdv.available());
+        Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
+        System.out.println("release manda: "+m.toString());
         broadcast(m,Main.RELEASE);
     }
     
@@ -137,7 +138,7 @@ public class UDPServer extends Thread {
         	// sino, aumenta el tiempo de la terminal
             PuntoDeVenta.time++;
             // crea un nuevo mensaje conteniendo el tiempo de la terminal y el pid local
-            Message m = new Message(PuntoDeVenta.time,Main.pid,Main.pdv.available());
+            Message m = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available());
             // crea un nuevo DatagramSocket
             DatagramSocket clientSocket = new DatagramSocket();
             // obtiene el IP al cual debe enviar el mensaje
