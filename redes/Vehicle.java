@@ -48,4 +48,8 @@ public class Vehicle {
 		}
 		return false;
 	}
+	
+	public void setReserved(int res){
+		reserved=res;
+	}
 }

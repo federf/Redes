@@ -59,9 +59,12 @@ public class UDPServer extends Thread {
                         Main.q.remove();
                         PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
                         //Terminal.reserved= Integer.parseInt(s[2]); // s[2] = estado
-                        /*if(replyCount >= Main.peerData.size()){
+                        if(Main.command.compareTo("available")==0){
+                        	PuntoDeVenta.v.setReserved(Integer.parseInt(s[3]));
+                        }
+                        if(replyCount >= Main.peerData.size()){
                             checkAndExecute();	//se fija si es su turno y ejecuta
-                        }*/
+                        }
                     break;
                 
                 }
