@@ -29,7 +29,8 @@ public class TCPServer extends Thread {
         Main.command = command;
         PuntoDeVenta.time++;
         System.out.println("cantidad de asientos cuando se hace el request: "+PuntoDeVenta.available());
-        Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available()); //agregarle el parametro al mensaje
+        //Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available()); //agregarle el parametro al mensaje
+        Message message = new Message(PuntoDeVenta.time,Main.pid);
         if(command.compareTo("available")!=0){
         	System.out.println("a parameter se le asigna: "+arrayData[1]);
             Main.parameter = Integer.parseInt(arrayData[1]);
@@ -57,7 +58,7 @@ public class TCPServer extends Thread {
                 while (!connectionSocket.isClosed()) {                                      
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                     outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-                    clientSentence = inFromClient.readLine()+" "+PuntoDeVenta.available();
+                    clientSentence = inFromClient.readLine();
                     //System.out.println("me llegó: "+clientSentence);
                     request(clientSentence);
                 }

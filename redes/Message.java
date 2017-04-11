@@ -9,6 +9,11 @@ class Message {
 	private int state;
 	private int pid;
 
+	public Message(int time, int pid){
+		this.time=time;
+		this.pid=pid;
+	}
+	
 	public Message(int time, int pid, int state) {
 		this.time = time;
 		this.pid = pid;

@@ -58,12 +58,9 @@ public class UDPServer extends Thread {
                     case Main.RELEASE:
                         Main.q.remove();
                         PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
-                        //Terminal.reserved= Integer.parseInt(s[2]); // s[2] = estado
-                        //Si el comando recibido no es "available" actualizamos el estado 
-                        //(la cantidad de asientos reservados)
-                        if(Main.command.compareTo("available")!=0){
-                        	PuntoDeVenta.reserved=Integer.parseInt(s[3]);
-                        }
+
+                        PuntoDeVenta.reserved=Integer.parseInt(s[3]);
+                        System.out.println("reservados= "+PuntoDeVenta.reserved);
                         if(replyCount >= Main.peerData.size()){
                             checkAndExecute();	//se fija si es su turno y ejecuta
                         }
