@@ -120,7 +120,8 @@ public class UDPServer extends Thread {
     public static void release() throws IOException {
         replyCount = 0;
         PuntoDeVenta.time++;
-        Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
+        //Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
+        Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.v.getReserved());
         System.out.println("release manda: "+m.toString());
         broadcast(m,Main.RELEASE);
     }

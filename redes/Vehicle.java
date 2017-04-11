@@ -50,6 +50,12 @@ public class Vehicle {
 	}
 	
 	public void setReserved(int res){
+		System.out.println("reserved fue seteado a: "+res);
 		reserved=res;
 	}
+	
+	public int getReserved(){
+		return reserved;
+	}
+	
 }
