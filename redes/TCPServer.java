@@ -28,13 +28,13 @@ public class TCPServer extends Thread {
         Main.parameter = -1;
         Main.command = command;
         PuntoDeVenta.time++;
-        System.out.println("cantidad de asientos cuando se hace el request: "+Main.pdv.v.available());
-        Message message = new Message(PuntoDeVenta.time,Main.pid,Main.pdv.v.available()); //agregarle el parametro al mensaje
+        System.out.println("cantidad de asientos cuando se hace el request: "+PuntoDeVenta.available());
+        Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available()); //agregarle el parametro al mensaje
         if(command.compareTo("available")!=0){
         	System.out.println("a parameter se le asigna: "+arrayData[1]);
             Main.parameter = Integer.parseInt(arrayData[1]);
         }else{//CAMBIE ACA EN CASO DE AVAILABLE SETEA EL PARAMETRO EN LA CANTIDAD DE ASIENTOS DISPONIBLES
-        	Main.parameter = Main.pdv.v.available();
+        	Main.parameter = PuntoDeVenta.available();
         }
         System.out.println("mensaje request: "+message+".");
         Main.q.add(message);
