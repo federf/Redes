@@ -34,9 +34,9 @@ public class UDPServer extends Thread {
                 sentence.replace('"', ' ');
                 String[] s = sentence.split("-");
                 System.out.println("cantidad de datos "+s.length);
-                System.out.println("s[0] "+s[0].toString());
-                System.out.println("s[1] "+s[1].toString());
-                System.out.println("s[2] "+s[2].toString());
+                for(int i=0; i<s.length; i++){
+                	System.out.println("s["+i+"] "+s[i].toString());
+                }
                 int timemsg=Integer.parseInt(s[1]);
                 int pidmsg=Integer.parseInt(s[2]);
                 System.out.println("time: "+timemsg+", pid: "+pidmsg);
@@ -120,7 +120,6 @@ public class UDPServer extends Thread {
     public static void release() throws IOException {
         replyCount = 0;
         PuntoDeVenta.time++;
-        //Message m = new Message(Terminal.time,Main.pid,Terminal.reserved);
         Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
         System.out.println("release manda: "+m.toString());
         broadcast(m,Main.RELEASE);
@@ -137,16 +136,18 @@ public class UDPServer extends Thread {
         if(i>=Main.peerData.size()){
         	throw new IOException("Current Process Id does not belong to any known peer");
         }else{
-        	// sino, aumenta el tiempo de la terminal
+        	// sino, aumenta el tiempo del punto de venta
             PuntoDeVenta.time++;
-            // crea un nuevo mensaje conteniendo el tiempo de la terminal y el pid local
+            // crea un nuevo mensaje conteniendo el tiempo del punto de venta, el pid local y la cantidad de asientos reservados 
             Message m = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available());
+            System.out.println("message reply "+m.toString());
             // crea un nuevo DatagramSocket
             DatagramSocket clientSocket = new DatagramSocket();
             // obtiene el IP al cual debe enviar el mensaje
             InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
             // crea el contenido del nuevo mensaje "REPLY-time-pid-"
             String sentence = Main.REPLY+ "-" + m.toString();
+            System.out.println("sentence: "+sentence);
             byte[] sendData = new byte[1024];
             sendData = sentence.getBytes();
             // crea un nuevo DatagramPacket con el contenido del mensaje, 

@@ -25,14 +25,16 @@ public class TCPServer extends Thread {
 	   	//System.out.println("request recibe: "+data+".");
         String[] arrayData = data.split(" ");
         String command = arrayData[0];
-        Main.parameter = -1; 
+        Main.parameter = -1;
         Main.command = command;
         PuntoDeVenta.time++;
-        Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available()); //agregarle el parametro al mensaje
-        if(arrayData.length > 1){
+        System.out.println("cantidad de asientos cuando se hace el request: "+PuntoDeVenta.v.available());
+        Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.v.available()); //agregarle el parametro al mensaje
+        if(command.compareTo("available")!=0){
+        	System.out.println("a parameter se le asigna: "+arrayData[1]);
             Main.parameter = Integer.parseInt(arrayData[1]);
         }else{//CAMBIE ACA EN CASO DE AVAILABLE SETEA EL PARAMETRO EN LA CANTIDAD DE ASIENTOS DISPONIBLES
-        	Main.parameter = PuntoDeVenta.available();
+        	Main.parameter = PuntoDeVenta.v.available();
         }
         System.out.println("mensaje request: "+message+".");
         Main.q.add(message);
