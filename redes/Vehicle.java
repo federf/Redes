@@ -28,8 +28,8 @@ public class Vehicle {
 	}
 	
 	public int available() {
-		System.out.println("cantidad de asientos "+seats);
-		System.out.println("cantidad de reservados "+reserved);
+		//System.out.println("cantidad de asientos "+seats);
+		//System.out.println("cantidad de reservados "+reserved);
 		return seats - reserved;
 	}
 

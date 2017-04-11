@@ -30,7 +30,7 @@ public class UDPServer extends Thread {
                 serverSocket.receive(receivePacket);
                 String sentence = new String(receivePacket.getData());
                 sentence=sentence.trim();
-                System.out.println("sentence: "+sentence);
+                //System.out.println("sentence: "+sentence);
                 sentence.replace('"', ' ');
                 String[] s = sentence.split("-");
                 System.out.println("cantidad de datos "+s.length);
@@ -59,6 +59,8 @@ public class UDPServer extends Thread {
                         Main.q.remove();
                         PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
                         //Terminal.reserved= Integer.parseInt(s[2]); // s[2] = estado
+                        //Si el comando recibido no es "available" actualizamos el estado 
+                        //(la cantidad de asientos reservados)
                         if(Main.command.compareTo("available")!=0){
                         	PuntoDeVenta.v.setReserved(Integer.parseInt(s[3]));
                         }

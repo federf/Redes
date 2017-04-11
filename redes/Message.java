@@ -14,21 +14,7 @@ class Message {
 		this.pid = pid;
 		this.state=state;
 	}
-
-	/*public Message(int time, int pid, int state) {
-		this.time = time;
-		this.pid = pid;
-		this.state = state;
-	}*/
-
-	/*public int getState() {
-		return state;
-	}*/
-
-	/*public void setState(int parameter) {
-		this.state = parameter;
-	}*/
-
+	
 	public int getTime() {
 		return time;
 	}
@@ -55,7 +41,6 @@ class Message {
 
 	@Override
 	public String toString() {
-		//return time + "-" + state + "-" + pid + "-";
 		return time + "-" + pid + "-"+ state;
 	}
 

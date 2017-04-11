@@ -22,7 +22,7 @@ public class TCPServer extends Thread {
     
     /*Metodo que se encarga de procesar un request del cliente*/
    private void request(String data)throws IOException{
-	   System.out.println("request recibe: "+data+".");
+	   	//System.out.println("request recibe: "+data+".");
         String[] arrayData = data.split(" ");
         String command = arrayData[0];
         Main.parameter = -1; 
@@ -56,7 +56,7 @@ public class TCPServer extends Thread {
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                     outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                     clientSentence = inFromClient.readLine()+" "+PuntoDeVenta.available();
-                    System.out.println("me llegó: "+clientSentence);
+                    //System.out.println("me llegó: "+clientSentence);
                     request(clientSentence);
                 }
                 
