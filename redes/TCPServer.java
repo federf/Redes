@@ -34,8 +34,6 @@ public class TCPServer extends Thread {
         if(command.compareTo("available")!=0){
         	System.out.println("a parameter se le asigna: "+arrayData[1]);
             Main.parameter = Integer.parseInt(arrayData[1]);
-        }else{//CAMBIE ACA EN CASO DE AVAILABLE SETEA EL PARAMETRO EN LA CANTIDAD DE ASIENTOS DISPONIBLES
-        	Main.parameter = PuntoDeVenta.available();
         }
         System.out.println("mensaje request: "+message+".");
         Main.q.add(message);
