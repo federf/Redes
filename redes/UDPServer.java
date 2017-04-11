@@ -62,7 +62,7 @@ public class UDPServer extends Thread {
                         //Si el comando recibido no es "available" actualizamos el estado 
                         //(la cantidad de asientos reservados)
                         if(Main.command.compareTo("available")!=0){
-                        	PuntoDeVenta.v.setReserved(Integer.parseInt(s[3]));
+                        	Main.pdv.v.setReserved(Integer.parseInt(s[3]));
                         }
                         if(replyCount >= Main.peerData.size()){
                             checkAndExecute();	//se fija si es su turno y ejecuta
@@ -121,7 +121,7 @@ public class UDPServer extends Thread {
         replyCount = 0;
         PuntoDeVenta.time++;
         //Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
-        Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.v.getReserved());
+        Message m = new Message(PuntoDeVenta.time,Main.pid, Main.pdv.v.getReserved());
         System.out.println("release manda: "+m.toString());
         broadcast(m,Main.RELEASE);
     }
