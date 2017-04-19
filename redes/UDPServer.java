@@ -30,7 +30,6 @@ public class UDPServer extends Thread {
                 serverSocket.receive(receivePacket);
                 String sentence = new String(receivePacket.getData());
                 sentence=sentence.trim();
-                //System.out.println("sentence: "+sentence);
                 sentence.replace('"', ' ');
                 String[] s = sentence.split("-");
                 System.out.println("cantidad de datos "+s.length);

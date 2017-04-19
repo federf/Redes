@@ -57,7 +57,7 @@ public class Main {
     /*Metodo principal, inicia los hilos de ejecucion de tcp para el cliente y udp para los peers*/
     public static void main(String[] args) throws IOException {
     	//loadConfig("src/redes/config.txt");
-        loadConfig("src/redes/config2.txt");
+        loadConfig("config2.txt");
         for (PeerData pd : peerData){
             System.out.println(pd.toString());
         }
