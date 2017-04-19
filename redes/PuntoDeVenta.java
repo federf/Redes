@@ -6,10 +6,6 @@ public class PuntoDeVenta {
 	static int reserved;
 	static int time = 0;
 
-	public PuntoDeVenta(String ip, Vehicle ve) {
-		IPPort = ip;
-	}
-	
 	public PuntoDeVenta(String ip){
 		IPPort=ip;
 	}
