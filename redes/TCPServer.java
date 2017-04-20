@@ -61,6 +61,7 @@ public class TCPServer extends Thread {
         if(Main.peerData.size()>0){
         	UDPServer.broadcast(message, Main.REQUEST);
         }else{
+        	// en caso de que no haya otros peers
         	checkAndExecute();
         }
         
