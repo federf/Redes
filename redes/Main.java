@@ -55,8 +55,8 @@ public class Main {
     }
 
     /*Metodo principal, inicia los hilos de ejecucion de tcp para el cliente y udp para los peers*/
-    public static void main(String[] args) throws IOException {
-    	//loadConfig("src/redes/config.txt");
+    public static void main(String[] args) throws IOException, InterruptedException {
+    	//loadConfig("config.txt");
         loadConfig("config2.txt");
         for (PeerData pd : peerData){
             System.out.println(pd.toString());
@@ -67,5 +67,9 @@ public class Main {
         UDPServer udp = new UDPServer(udpPort);
         tcp.start();
         udp.start();
+        
+        //wait for threads
+        tcp.join();
+        udp.join();
     }
 }

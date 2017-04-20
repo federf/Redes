@@ -14,6 +14,8 @@ public class UDPServer extends Thread {
     DatagramSocket serverSocket;
     byte[] receiveData;
     byte[] sendData;
+    // cadena que se retorna al cliente via telnet
+    static String toClient;
 
     public UDPServer(int Port) throws SocketException {
         serverSocket = new DatagramSocket(Port);
@@ -57,9 +59,9 @@ public class UDPServer extends Thread {
                     case Main.RELEASE:
                         Main.q.remove();
                         PuntoDeVenta.time = Math.max(PuntoDeVenta.time, msg.getTime()) + 1;
-
-                        PuntoDeVenta.reserved=Integer.parseInt(s[3]);
-                        System.out.println("reservados= "+PuntoDeVenta.reserved);
+                        
+                        //setReserved
+                        PuntoDeVenta.setReserved(Integer.parseInt(s[3]));
                         if(replyCount >= Main.peerData.size()){
                             checkAndExecute();	//se fija si es su turno y ejecuta
                         }
@@ -81,23 +83,29 @@ public class UDPServer extends Thread {
     }
     
     /*Metodo que ejecuta el codigo correspondiente al request*/
-    public static void exec(){        
+    public static void exec(){
+    	toClient="";
         switch(Main.command){
             case "available":
-                System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
+                //System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
+                toClient="Quedan " + PuntoDeVenta.available() + " lugares\n";
             break;
             case "reserve":
                 if(PuntoDeVenta.reserve(Main.parameter)){
-                	System.out.println("Reservaste exitosa");
+                	//System.out.println("Reservaste exitosa");
+                	toClient="Reserva exitosa\n";
                 }else{
-                	System.out.println("No hay suficientes asientos disponibles");
+                	//System.out.println("No hay suficientes asientos disponibles, quedan: "+PuntoDeVenta.available());
+                	toClient="No hay sufucientes asientos disponibles, quedan: "+PuntoDeVenta.available()+"\n";
                 }
             break;
             case "cancel":
                 if(PuntoDeVenta.cancel(Main.parameter)){
-                	System.out.println("Cancelacion exitosa");
+                	//System.out.println("Cancelación exitosa");
+                	toClient="Cancelación exitosa\n";
                 }else{
-                	System.out.println("Error al cancelar");
+                	//System.out.println("Error al cancelar");
+                	toClient="Error al cancelar\n";
                 }
             break;
         }
@@ -117,7 +125,7 @@ public class UDPServer extends Thread {
         replyCount = 0;
         PuntoDeVenta.time++;
         //Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
-        Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.reserved);
+        Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.getReserved());
         System.out.println("release manda: "+m.toString());
         broadcast(m,Main.RELEASE);
     }

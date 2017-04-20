@@ -13,8 +13,9 @@ public class TCPServer extends Thread {
 
     String clientSentence;
     String capitalizedSentenceTCP;
-    ServerSocket welcomeSocket;
-    DataOutputStream outToClient;  
+    ServerSocket welcomeSocket; 
+    // cadena que se retorna al cliente via telnet
+    static String toClient;
        
     public TCPServer(int Port) throws IOException {
         welcomeSocket = new ServerSocket(Port);
@@ -22,20 +23,19 @@ public class TCPServer extends Thread {
     
     /*Metodo que se encarga de procesar un request del cliente*/
    private void request(String data)throws IOException{
-	   	//System.out.println("request recibe: "+data+".");
         String[] arrayData = data.split(" ");
         String command = arrayData[0];
         Main.parameter = -1;
         Main.command = command;
         PuntoDeVenta.time++;
-        System.out.println("cantidad de asientos cuando se hace el request: "+PuntoDeVenta.available());
+        
         //Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available()); //agregarle el parametro al mensaje
         Message message = new Message(PuntoDeVenta.time,Main.pid);
         if(command.compareTo("available")!=0){
-        	System.out.println("a parameter se le asigna: "+arrayData[1]);
+        	
             Main.parameter = Integer.parseInt(arrayData[1]);
         }
-        System.out.println("mensaje request: "+message+".");
+        
         Main.q.add(message);
         // si hay al menos un peer se debe hacer broadcast
         if(Main.peerData.size()>0){
@@ -55,10 +55,19 @@ public class TCPServer extends Thread {
                 connectionSocket = welcomeSocket.accept();
                 while (!connectionSocket.isClosed()) {                                      
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                    outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                     clientSentence = inFromClient.readLine();
-                    //System.out.println("me llegó: "+clientSentence);
+                    
+                    //devolver el resultado del request a telnet 
+                    DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+                    
                     request(clientSentence);
+                    if(toClient.equals("")){
+                    	outToClient.writeBytes(UDPServer.toClient);
+                    }else{
+                    	outToClient.writeBytes(toClient);
+                    }
+                    
+                    
                 }
                 
             } catch (IOException ex) {
@@ -68,23 +77,29 @@ public class TCPServer extends Thread {
     }
     
     /*Metodo que ejecuta el codigo correspondiente al request*/
-    public static void exec(){        
+    public static void exec(){
+    	toClient="";
         switch(Main.command){
             case "available":
-                System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
+                //System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
+                toClient="Quedan " + PuntoDeVenta.available() + " lugares\n";
             break;
             case "reserve":
                 if(PuntoDeVenta.reserve(Main.parameter)){
-                	System.out.println("Reservaste exitosa");
+                	//System.out.println("Reservaste exitosa");
+                	toClient="Reserva exitosa\n";
                 }else{
-                	System.out.println("No hay suficientes asientos disponibles");
+                	//System.out.println("No hay suficientes asientos disponibles, quedan: "+PuntoDeVenta.available());
+                	toClient="No hay sufucientes asientos disponibles, quedan: "+PuntoDeVenta.available()+"\n";
                 }
             break;
             case "cancel":
                 if(PuntoDeVenta.cancel(Main.parameter)){
-                	System.out.println("Cancelacion exitosa");
+                	//System.out.println("Cancelación exitosa");
+                	toClient="Cancelación exitosa\n";
                 }else{
-                	System.out.println("Error al cancelar");
+                	//System.out.println("Error al cancelar");
+                	toClient="Error al cancelar\n";
                 }
             break;
         }
