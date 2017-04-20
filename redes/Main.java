@@ -57,7 +57,7 @@ public class Main {
     /*Metodo principal, inicia los hilos de ejecucion de tcp para el cliente y udp para los peers*/
     public static void main(String[] args) throws IOException, InterruptedException {
     	//loadConfig("config.txt");
-        loadConfig("config2.txt");
+        loadConfig("config.txt");
         for (PeerData pd : peerData){
             System.out.println(pd.toString());
         }

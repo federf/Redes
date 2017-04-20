@@ -19,6 +19,7 @@ public class TCPServer extends Thread {
        
     public TCPServer(int Port) throws IOException {
         welcomeSocket = new ServerSocket(Port);
+        toClient="";
     }
     
     /*Metodo que se encarga de procesar un request del cliente*/
@@ -35,6 +36,25 @@ public class TCPServer extends Thread {
         	
             Main.parameter = Integer.parseInt(arrayData[1]);
         }
+        
+        // verificamos si es posible realizar una reserva/cancelacion
+        // antes de siquiera encolar el request
+        // asi evitamos entrar a la zona critica para no hacer ningun cambio
+        if(command.compareTo("reserve")==0){
+        	if(PuntoDeVenta.available()<Main.parameter){
+        		toClient="No es posible reservar "+Main.parameter+", hay "+PuntoDeVenta.available()+" asientos disponibles.\n";
+        		return;
+        	}
+        }
+        
+        if(command.compareTo("cancel")==0){
+        	if(PuntoDeVenta.getReserved()<Main.parameter){
+        		toClient="No es posible cancelar "+Main.parameter+", hay "+PuntoDeVenta.getReserved()+" asientos reservados.\n";
+        		return;
+        	}
+        }
+        
+        
         
         Main.q.add(message);
         // si hay al menos un peer se debe hacer broadcast
@@ -78,7 +98,6 @@ public class TCPServer extends Thread {
     
     /*Metodo que ejecuta el codigo correspondiente al request*/
     public static void exec(){
-    	toClient="";
         switch(Main.command){
             case "available":
                 //System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
