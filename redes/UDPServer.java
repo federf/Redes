@@ -1,5 +1,6 @@
 package redes;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -21,12 +22,14 @@ public class UDPServer extends Thread {
         serverSocket = new DatagramSocket(Port);
         receiveData = new byte[1024];
         sendData = new byte[1024];
+        toClient="";
     }
 
     @Override
     public void run() {
         System.out.println("UDP SERVER ON, port: "+serverSocket.getLocalPort());
         while (true) {
+        	toClient="";
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             try {
                 serverSocket.receive(receivePacket);
@@ -34,13 +37,8 @@ public class UDPServer extends Thread {
                 sentence=sentence.trim();
                 sentence.replace('"', ' ');
                 String[] s = sentence.split("-");
-                System.out.println("cantidad de datos "+s.length);
-                for(int i=0; i<s.length; i++){
-                	System.out.println("s["+i+"] "+s[i].toString());
-                }
                 int timemsg=Integer.parseInt(s[1]);
                 int pidmsg=Integer.parseInt(s[2]);
-                System.out.println("time: "+timemsg+", pid: "+pidmsg);
                 Message msg = new Message(timemsg,pidmsg,PuntoDeVenta.available()); //s[1] = tiempo , s[2]= pid
                 switch(s[0]){ //s[0] = comando
                     case Main.REQUEST:    
@@ -75,6 +73,15 @@ public class UDPServer extends Thread {
                 sendData = capitalizedSentence.getBytes();
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
                 serverSocket.send(sendPacket);
+                
+                //devolver el resultado del request a telnet 
+                DataOutputStream outToClient = new DataOutputStream(TCPServer.connectionSocket.getOutputStream());
+                
+                if(toClient.equals("")){
+                	outToClient.writeBytes(UDPServer.toClient);
+                }else{
+                	outToClient.writeBytes(toClient);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -84,12 +91,11 @@ public class UDPServer extends Thread {
     
     /*Metodo que ejecuta el codigo correspondiente al request*/
     public static void exec(){
-    	toClient="";
         switch(Main.command){
-            case "available":
+            /*case "available":
                 //System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
                 toClient="Quedan " + PuntoDeVenta.available() + " lugares\n";
-            break;
+            break;*/
             case "reserve":
                 if(PuntoDeVenta.reserve(Main.parameter)){
                 	//System.out.println("Reservaste exitosa");
@@ -126,7 +132,6 @@ public class UDPServer extends Thread {
         PuntoDeVenta.time++;
         //Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.available());
         Message m = new Message(PuntoDeVenta.time,Main.pid, PuntoDeVenta.getReserved());
-        System.out.println("release manda: "+m.toString());
         broadcast(m,Main.RELEASE);
     }
     
@@ -145,14 +150,12 @@ public class UDPServer extends Thread {
             PuntoDeVenta.time++;
             // crea un nuevo mensaje conteniendo el tiempo del punto de venta, el pid local y la cantidad de asientos reservados 
             Message m = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available());
-            System.out.println("message reply "+m.toString());
             // crea un nuevo DatagramSocket
             DatagramSocket clientSocket = new DatagramSocket();
             // obtiene el IP al cual debe enviar el mensaje
             InetAddress IPAddress = InetAddress.getByName(Main.peerData.get(i).getIp());
             // crea el contenido del nuevo mensaje "REPLY-time-pid-"
             String sentence = Main.REPLY+ "-" + m.toString();
-            System.out.println("sentence: "+sentence);
             byte[] sendData = new byte[1024];
             sendData = sentence.getBytes();
             // crea un nuevo DatagramPacket con el contenido del mensaje, 

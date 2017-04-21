@@ -16,6 +16,7 @@ public class TCPServer extends Thread {
     ServerSocket welcomeSocket; 
     // cadena que se retorna al cliente via telnet
     static String toClient;
+    public static Socket connectionSocket;
        
     public TCPServer(int Port) throws IOException {
         welcomeSocket = new ServerSocket(Port);
@@ -30,16 +31,18 @@ public class TCPServer extends Thread {
         Main.command = command;
         PuntoDeVenta.time++;
         
-        //Message message = new Message(PuntoDeVenta.time,Main.pid,PuntoDeVenta.available()); //agregarle el parametro al mensaje
         Message message = new Message(PuntoDeVenta.time,Main.pid);
         if(command.compareTo("available")!=0){
-        	
             Main.parameter = Integer.parseInt(arrayData[1]);
         }
         
         // verificamos si es posible realizar una reserva/cancelacion
         // antes de siquiera encolar el request
         // asi evitamos entrar a la zona critica para no hacer ningun cambio
+        if(command.compareTo("available")==0){
+        	toClient="Asientos disponibles: "+PuntoDeVenta.available()+"\n";
+        }
+        
         if(command.compareTo("reserve")==0){
         	if(PuntoDeVenta.available()<Main.parameter){
         		toClient="No es posible reservar "+Main.parameter+", hay "+PuntoDeVenta.available()+" asientos disponibles.\n";
@@ -54,8 +57,6 @@ public class TCPServer extends Thread {
         	}
         }
         
-        
-        
         Main.q.add(message);
         // si hay al menos un peer se debe hacer broadcast
         if(Main.peerData.size()>0){
@@ -64,17 +65,17 @@ public class TCPServer extends Thread {
         	// en caso de que no haya otros peers
         	checkAndExecute();
         }
-        
     }
     
     @Override
     public void run() {
         System.out.println("TCP SERVER ON, port: "+welcomeSocket.getLocalPort());
  
-            Socket connectionSocket;
+            //Socket connectionSocket;
             try {
                 connectionSocket = welcomeSocket.accept();
-                while (!connectionSocket.isClosed()) {                                      
+                while (!connectionSocket.isClosed()) {
+                	toClient="";
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                     clientSentence = inFromClient.readLine();
                     
@@ -82,6 +83,7 @@ public class TCPServer extends Thread {
                     DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                     
                     request(clientSentence);
+                    
                     if(toClient.equals("")){
                     	outToClient.writeBytes(UDPServer.toClient);
                     }else{
@@ -100,10 +102,10 @@ public class TCPServer extends Thread {
     /*Metodo que ejecuta el codigo correspondiente al request*/
     public static void exec(){
         switch(Main.command){
-            case "available":
+            /*case "available":
                 //System.out.println("Quedan " + PuntoDeVenta.available() + " lugares");
                 toClient="Quedan " + PuntoDeVenta.available() + " lugares\n";
-            break;
+            break;*/
             case "reserve":
                 if(PuntoDeVenta.reserve(Main.parameter)){
                 	//System.out.println("Reservaste exitosa");
