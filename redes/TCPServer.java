@@ -16,7 +16,7 @@ public class TCPServer extends Thread {
     ServerSocket welcomeSocket; 
     // cadena que se retorna al cliente via telnet
     static String toClient;
-    public static Socket connectionSocket;
+    public Socket connectionSocket;
        
     public TCPServer(int Port) throws IOException {
         welcomeSocket = new ServerSocket(Port);
@@ -89,7 +89,6 @@ public class TCPServer extends Thread {
                     }else{
                     	outToClient.writeBytes(toClient);
                     }
-                    
                     
                 }
                 

@@ -75,7 +75,7 @@ public class UDPServer extends Thread {
                 serverSocket.send(sendPacket);
                 
                 //devolver el resultado del request a telnet 
-                DataOutputStream outToClient = new DataOutputStream(TCPServer.connectionSocket.getOutputStream());
+                DataOutputStream outToClient = new DataOutputStream(Main.tcp.connectionSocket.getOutputStream());
                 
                 if(toClient.equals("")){
                 	outToClient.writeBytes(UDPServer.toClient);

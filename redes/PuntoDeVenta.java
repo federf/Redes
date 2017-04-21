@@ -8,8 +8,18 @@ public class PuntoDeVenta {
 	// debe ser privada
 	static private int reserved;
 	static int time = 0;
+	private static PuntoDeVenta pdv;
 
-	public PuntoDeVenta(String ip){
+	public static PuntoDeVenta SingletonPuntoDeVenta(String ip){
+		if(pdv==null){
+			pdv=new PuntoDeVenta(ip);
+		}else{
+			System.out.println("No se puede crear una instancia de PuntoDeVenta porque ya existe una");
+		}
+		return pdv;
+	}
+	
+	private PuntoDeVenta(String ip){
 		IPPort=ip;
 	}
 	

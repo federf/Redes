@@ -21,6 +21,8 @@ public class Main {
     public static ArrayList<PeerData> peerData = new ArrayList<PeerData>();
     public static int parameter = -1; // parametro opcional de las consultas
     public static String command = "";
+    public static TCPServer tcp;
+    
     
     //Cola de prioridades, donde se encolan consultas, es la estructura que usa el algoritmo distribuido de Lamport para la exclusion mutua
     static SyncQueue<Message> q = new SyncQueue<Message>(10, new Comparator<Message>() {
@@ -61,9 +63,9 @@ public class Main {
         for (PeerData pd : peerData){
             System.out.println(pd.toString());
         }
-        pdv=new PuntoDeVenta(InetAddress.getLocalHost().toString());
+        pdv=PuntoDeVenta.SingletonPuntoDeVenta(InetAddress.getLocalHost().toString());
         System.out.println("mis datos. id: " + pid +", udpPort: " + udpPort + ", tcpPort: " + tcpPort);
-        TCPServer tcp = new TCPServer(tcpPort);
+        tcp = new TCPServer(tcpPort);
         UDPServer udp = new UDPServer(udpPort);
         tcp.start();
         udp.start();
